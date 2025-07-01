@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Intelligent Resume Generator</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://kit.fontawesome.com/3d9b45e8a6.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="script.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/7.1.0-beta.3/docx.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+
+
+
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Intelligent Resume Generator</h1>
+      <p>Create ATS-friendly resumes tailored to your target industry with smart content suggestions</p>
+    </header>
+
+    <div class="main-content">
+      <div class="input-section">
+        <h2 class="section-title">Your Information</h2>
+        <form id="resumeForm" onsubmit="return false;">
+          <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" placeholder="John Doe" />
+          </div>
+          <div class="form-group">
+            <label for="jobTitle">Professional Title</label>
+            <input type="text" id="jobTitle" placeholder="Software Engineer" />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" placeholder="john.doe@example.com" />
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone</label>
+              <input type="tel" id="phone" placeholder="+1 (123) 456-7890" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="location">Location</label>
+            <input type="text" id="location" placeholder="San Francisco, CA" />
+          </div>
+          <div class="form-group">
+            <label for="summary">Professional Summary</label>
+            <textarea id="summary" placeholder="A dedicated professional with..."></textarea>
+          </div>
+
+          <h2 class="section-title">Work Experience</h2>
+          <div id="experienceContainer">
+            <div class="experience-form" id="experience1">
+              <div class="form-group">
+                <label for="jobTitle1">Job Title</label>
+                <input type="text" id="jobTitle1" placeholder="Senior Developer" />
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="company1">Company</label>
+                  <input type="text" id="company1" placeholder="Tech Solutions Inc." />
+                </div>
+                <div class="form-group">
+                  <label for="jobDate1">Date Range</label>
+                  <input type="text" id="jobDate1" placeholder="Jan 2020 - Present" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="jobDescription1">Description & Achievements</label>
+                <textarea id="jobDescription1" placeholder="Led development of..."></textarea>
+              </div>
+            </div>
+          </div>
+          <button type="button" id="addExperience" class="btn"><i class="fas fa-plus"></i> Add Another Experience</button>
+
+          <h2 class="section-title">Education</h2>
+          <div id="educationContainer">
+            <div class="education-form" id="education1">
+              <div class="form-group">
+                <label for="school1">School/University</label>
+                <input type="text" id="school1" placeholder="Stanford University" />
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="degree1">Degree</label>
+                  <input type="text" id="degree1" placeholder="Bachelor of Science in Computer Science" />
+                </div>
+                <div class="form-group">
+                  <label for="educationDate1">Date Range</label>
+                  <input type="text" id="educationDate1" placeholder="2016 - 2020" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <button type="button" id="addEducation" class="btn"><i class="fas fa-plus"></i> Add Another Education</button>
+
+          <div class="form-group">
+            <label for="skills">Skills (comma separated)</label>
+            <input type="text" id="skills" placeholder="JavaScript, Python, Project Management" />
+          </div>
+          <div class="form-group">
+            <label for="industry">Target Industry</label>
+            <select id="industry">
+              <option value="">-- Select Industry --</option>
+              <option value="Technology">Technology</option>
+              <option value="Finance">Finance</option>
+              <option value="Healthcare">Healthcare</option>
+              <option value="Marketing">Marketing</option>
+              <option value="Education">Education</option>
+              <option value="Legal">Legal</option>
+              <option value="Engineering">Engineering</option>
+              <option value="Sales">Sales</option>
+              <option value="Hospitality">Hospitality</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="jobDescription">Target Job Description (for matching)</label>
+            <textarea id="jobDescription" placeholder="Paste the job description here..."></textarea>
+          </div>
+          <div class="form-group">
+            <button type="button" id="generateBtn" class="btn"><i class="fas fa-cogs"></i> Generate Resume</button>
+            <button type="button" id="resetBtn" class="btn btn-outline"><i class="fas fa-redo"></i> Reset Form</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="preview-section">
+        <h2 class="section-title">Resume Preview</h2>
+
+        <div class="template-selector">
+          <h2 class="section-title">Template Selection</h2>
+          <div class="template-card active" data-template="professional">
+            <div class="template-thumb">💼</i></div>
+            <div class="template-info">
+              <h4>Professional</h4>
+              <p>Traditional & formal</p>
+            </div>
+          </div>
+          <div class="template-card" data-template="modern">
+            <div class="template-thumb">✨</i></div>
+            <div class="template-info">
+              <h4>Modern</h4>
+              <p>Creative & stylish</p>
+            </div>
+          </div>
+          <div class="template-card" data-template="minimalist">
+            <div class="template-thumb">🖹</i></div>
+            <div class="template-info">
+              <h4>Minimalist</h4>
+              <p>Clean & simple</p>
+            </div>
+          </div>
+          <div class="template-card" data-template="elegant">
+            <div class="template-thumb">💎</i></div>
+            <div class="template-info">
+              <h4>Elegant</h4>
+              <p>Refined & sophisticated</p>
+            </div>
+          </div>
+          <div class="template-card" data-template="creative">
+            <div class="template-thumb">🎨</i></div>
+            <div class="template-info">
+              <h4>Creative</h4>
+              <p>Colorful & unique</p>
+            </div>
+          </div>
+          <div class="template-card" data-template="ai-generated">
+            <div class="template-thumb">🤖</i></div>
+            <div class="template-info">
+              <h4>AI Generated</h4>
+              <p>AI-structured & enhanced</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="preview-tabs">
+          <button class="tab-btn active" data-tab="full">Full Resume</button>
+          <button class="tab-btn" data-tab="summary">Summary</button>
+          <button class="tab-btn" data-tab="experience">Experience</button>
+          <button class="tab-btn" data-tab="education">Education</button>
+          <button class="tab-btn" data-tab="skills">Skills</button>
+        </div>
+
+        <div class="loading-indicator" id="loadingIndicator" style="display: none; text-align: center; padding: 20px;">
+          <i class="fas fa-spinner fa-spin fa-3x"></i>
+          <p>Generating AI Template...</p>
+        </div>
+
+        <div class="resume-preview template-professional" id="resumePreview"></div>
+
+        <div class="export-panel">
+          <button class="export-btn pdf" id="exportPdfBtn"><i class="fas fa-file-pdf"></i> Export PDF</button>
+          <button class="export-btn html" id="exportHtmlBtn"><i class="fas fa-file-code"></i> Export HTML</button>
+          <!--<button class="export-btn docx" id="exportDocxBtn"><i class="fas fa-file-pdf"></i> Export DOCX</button>-->
+          
+
+        </div>
+      </div>
+    </div>
+
+    <div class="suggestions-panel">
+      <h2 class="section-title">Smart Suggestions</h2>
+      <ul class="suggestion-list" id="suggestionsList"></ul>
+    </div>
+
+    <div class="ats-meter">
+      <div class="meter-header">
+        <h2 class="meter-title">ATS Compatibility Score</h2>
+        <div class="meter-score" id="atsScore">0%</div>
+      </div>
+      <div class="meter-bar">
+        <div class="meter-fill" id="meterFill"></div>
+      </div>
+      <div class="meter-feedback">
+        <h3 class="feedback-title">Optimization Tips:</h3>
+        <ul class="feedback-list" id="feedbackList"></ul>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
