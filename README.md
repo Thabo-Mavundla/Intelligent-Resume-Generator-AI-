@@ -160,7 +160,7 @@ Please open a pull request or create an issue in the [GitHub repository](https:/
 
 Created by **Thabo Marvin**
 
-* ✉️ Email: [thabo.marvin@example.com](mavundlatm@icloud.com)
+* ✉️ Email: [mavundlatm@icloud.com](mavundlatm@icloud.com)
 * 🐱 GitHub: [Thabo Mavundla](https://github.com/Thabo-Mavundla)
 
 ---
